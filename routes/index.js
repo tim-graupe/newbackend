@@ -4,7 +4,7 @@ const authController = require("../controllers/authController");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
-  res.send({ user: req.user });
+  res.send({ user: req.user, isAuth: req.isAuthenticated() });
 });
 router.post("/register", authController.sign_up_post);
 
