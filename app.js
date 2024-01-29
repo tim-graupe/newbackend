@@ -17,6 +17,8 @@ async function main() {
   await mongoose.connect(process.env.mongoDB);
 }
 var indexRouter = require("./routes/index");
+const userRouter = require("./routes/users");
+const postRouter = require("./routes/posts");
 var app = express();
 
 // view engine setup
@@ -161,7 +163,8 @@ app.post(
   })
 );
 app.use("/", indexRouter);
-
+app.use("/", userRouter);
+app.use("/", postRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

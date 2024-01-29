@@ -1,4 +1,5 @@
 const User = require("../models/newUserModel");
+const mongoose = require("mongoose");
 
 //get friend reqs
 exports.getFriendReqs = async function (req, res, next) {

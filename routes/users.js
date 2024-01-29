@@ -1,44 +1,44 @@
 var express = require("express");
-const postsController = require("../controllers/postsController");
+const usersController = require("../controllers/usersController");
 var router = express.Router();
 
 //get user
-router.get("/user/:id", postsController.getUser);
+router.get("/user/:id", usersController.getUser);
 
 //send friend reqs
-router.post("/sendFriendReq/:id", postsController.sendFriendReq);
+router.post("/sendFriendReq/:id", usersController.sendFriendReq);
 
-//get friend reqs
-router.get("/getFriendReqs/:id", postsController.getFriendReqs);
+// //get friend reqs
+router.get("/getFriendReqs/:id", usersController.getFriendReqs);
 
-//reject friend req
-router.post("/acceptFriendReq/:id", postsController.rejectFriendReq);
+// //reject friend req
+router.post("/acceptFriendReq/:id", usersController.rejectFriendReq);
 
-//accept friend req
-router.post("/acceptFriendReq/:id", postsController.acceptFriendReq);
+// //accept friend req
+router.post("/acceptFriendReq/:id", usersController.acceptFriendReq);
 
-//delete friend
-router.post("/deleteFriend/:id", postsController.deleteFriend);
+// //delete friend
+router.post("/deleteFriend/:id", usersController.deleteFriend);
 
-//get friends to view  user's profile
-router.get("/getFriends/:id", postsController.getFriends);
+// //get friends to view  user's profile
+router.get("/getFriends/:id", usersController.getFriends);
 
-//get friends posts for dashboard
-router.get("/getFriendsPosts/:id", postsController.getFriendsPosts);
+// //get friends posts for dashboard
+router.get("/getFriendsPosts/:id", usersController.getFriendsPosts);
 
-//get friends list for dashboard
-router.get("/getFriends/", postsController.getFriendsList);
+// //get friends list for dashboard
+router.get("/getFriends/", usersController.getFriendsList);
 
-//create new group
-router.post("/newGroup", postsController.createGroup);
+// //create new group
+router.post("/newGroup", usersController.createGroup);
 
-//show group
-router.get("/group/:id", postsController.getGroup);
+// //show group
+router.get("/group/:id", usersController.getGroup);
 
-//show groups for profile
-router.get("/user/:id/groups", postsController.getGroupsUserIsIn);
+// //show groups for profile
+router.get("/user/:id/groups", usersController.getGroupsUserIsIn);
 
-//search user
-router.get("/search", postsController.findUser);
+// //search user
+router.get("/search", usersController.findUser);
 
 module.exports = router;
