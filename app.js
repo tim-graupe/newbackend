@@ -4,8 +4,10 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const passport = require("passport");
+const bcrypt = require("bcrypt");
 const User = require("./models/newUserModel");
 var GoogleStrategy = require("passport-google-oauth20").Strategy;
+const LocalStrategy = require("passport-local").Strategy;
 require("dotenv").config();
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
@@ -34,6 +36,21 @@ app.use(
     saveUninitialized: true,
   })
 );
+
+app.use(function (req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  next();
+});
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -74,6 +91,36 @@ passport.use(
     }
   )
 );
+passport.use(
+  new LocalStrategy(
+    {
+      usernameField: "email",
+    },
+    async function (email, password, done) {
+      // Change 'username' to 'email' here
+      try {
+        const user = await User.findOne({ email: email }); // Use 'email' here
+
+        if (!user) {
+          console.log("Incorrect email.");
+          return done(null, false);
+        }
+
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        if (!passwordMatch) {
+          console.log("Incorrect password.", password, user.password);
+          return done(null, false);
+        }
+
+        return done(null, user);
+      } catch (err) {
+        console.log("err"); // Fix the logging of the error
+        return done(err);
+      }
+    }
+  )
+);
 
 passport.serializeUser(function (user, done) {
   done(null, user.id);
@@ -104,6 +151,14 @@ app.get(
     // Successful authentication, redirect home.
     res.redirect("/");
   }
+);
+
+app.post(
+  "/login",
+  passport.authenticate("local", {
+    failureRedirect: "/login",
+    successRedirect: "/",
+  })
 );
 app.use("/", indexRouter);
 
