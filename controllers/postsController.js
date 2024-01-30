@@ -1,5 +1,6 @@
 const Post = require("../models/newPostModel");
 const Comment = require("../models/commentModel");
+const User = require("../models/newUserModel");
 const { ObjectId } = require("mongodb");
 
 exports.getPosts = async function (req, res, next) {
@@ -54,27 +55,20 @@ exports.addLikeToPost = async function (req, res, next) {
 
 exports.newTextPost = async function (req, res, next) {
   try {
-    // Fetch the user whose profile the post will be made to
-    let userProfileOwner = await User.findById(req.params.id);
-
-    // Fetch the logged-in user (the one making the post)
-    let loggedInUser = await User.findById(req.user._id);
-
+    let user = await User.findById(req.user._id);
     let newPost = new Post({
       content: req.body.content,
-      poster: loggedInUser,
+      profile: req.body.profile,
       likes: [],
-      datePosted: Date.now(),
-      userProfileOwnerId: userProfileOwner._id,
+      date_posted: Date.now(),
+      user: user._id,
       type: "post",
     });
-
     await newPost.save();
   } catch (err) {
-    res.status(500).json({ error: "Error encountered", err });
+    res.status(500).json({ error: "error found", err });
   }
 };
-
 //leave comment reply on a post
 exports.newComment = async function (req, res, next) {
   try {

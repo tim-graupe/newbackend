@@ -17,7 +17,7 @@ const PostSchema = new Schema({
     type: String,
   },
   type: { type: String },
-  poster: { type: Schema.Types.ObjectId, ref: "User" },
+  profile: { type: Schema.Types.ObjectId, ref: "User" },
   date_posted: { type: Date, default: Date.now },
   likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
