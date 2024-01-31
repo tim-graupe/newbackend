@@ -133,7 +133,7 @@ exports.editUserInfo = async function (req, res, next) {
 exports.sendFriendReq = async function (req, res, next) {
   try {
     // Find the sender and receiver by their IDs
-    const sender = await User.findById(req.body.id);
+    const sender = await User.findById(req.user._id);
     const receiver = await User.findById(req.params.id);
     // Check if sender and receiver are already friends
 

@@ -4,9 +4,10 @@ const User = require("../models/newUserModel");
 const { ObjectId } = require("mongodb");
 
 exports.getPosts = async function (req, res, next) {
+  console.log(req.params.id);
   try {
-    let posts = await Post.find({ user: req.params.id })
-      .populate("user poster likes")
+    let posts = await Post.find({ profile: req.params.id })
+      .populate("user profile likes")
       .populate({
         path: "comments",
         populate: {
