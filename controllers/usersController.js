@@ -93,13 +93,13 @@ exports.findUser = async function (req, res, next) {
     }
 
     // Search for a group by name
-    const groupResult = await Group.findOne({
-      name: new RegExp(searchName, "i"),
-    });
+    // const groupResult = await Group.findOne({
+    //   name: new RegExp(searchName, "i"),
+    // });
 
-    if (groupResult) {
-      searchResults.group = groupResult;
-    }
+    // if (groupResult) {
+    //   searchResults.group = groupResult;
+    // }
 
     res.json(searchResults);
   } catch (error) {
