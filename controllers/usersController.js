@@ -221,7 +221,7 @@ exports.acceptFriendReq = async function (req, res, next) {
 exports.rejectFriendReq = async function (req, res, next) {
   try {
     // RequestingFriendsId is the ID of the user who sent the request
-    const requestingUser = req.body.RequestingFriendsId._id;
+    const requestingUser = req.body.RequestingFriendsId;
     const currentUserID = req.user._id;
 
     // Update the current user's friends list
@@ -278,29 +278,6 @@ exports.getFriendsList = async function (req, res, next) {
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Error found!", err });
-  }
-};
-
-//Used to show friends post feed on user's homepage / main dashboard
-exports.getFriendsPosts = async function (req, res, next) {
-  try {
-    const user = await User.findById(req.user._id);
-    const friendsPosts = await Post.find({
-      poster: { $in: user.friends },
-    })
-      .populate("poster", ["firstName", "lastName", "profile_pic"])
-      .populate({
-        path: "comments",
-        populate: {
-          path: "user",
-          select: ["firstName", "lastName"],
-        },
-      })
-      .exec();
-
-    return res.status(200).json({ friendsPosts });
-  } catch (err) {
-    res.status(500).json({ error: "Error found!", err });
   }
 };
 

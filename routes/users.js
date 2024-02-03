@@ -12,7 +12,7 @@ router.post("/sendFriendReq/:id", usersController.sendFriendReq);
 router.get("/getFriendReqs/:id", usersController.getFriendReqs);
 
 // //reject friend req
-router.post("/acceptFriendReq/:id", usersController.rejectFriendReq);
+router.post("/rejectFriendReq/:id", usersController.rejectFriendReq);
 
 // //accept friend req
 router.post("/acceptFriendReq/:id", usersController.acceptFriendReq);
@@ -22,9 +22,6 @@ router.post("/deleteFriend/:id", usersController.deleteFriend);
 
 // //get friends to view  user's profile
 router.get("/getFriends/:id", usersController.getFriends);
-
-// //get friends posts for dashboard
-router.get("/getFriendsPosts/:id", usersController.getFriendsPosts);
 
 // //get friends list for dashboard
 router.get("/getFriends/", usersController.getFriendsList);

@@ -23,6 +23,34 @@ exports.getPosts = async function (req, res, next) {
   }
 };
 
+exports.getFriendsPosts = async (req, res, next) => {
+  try {
+    const user = req.user;
+    if (!user) {
+      return res.status(401).json({ error: "error" });
+    }
+    const posts = await Post.find({
+      $or: [
+        { user: { $in: user.friends } },
+        { profile: { $in: user.friends } },
+      ],
+    })
+      .populate("user profile likes")
+      .populate({
+        path: "comments",
+        populate: {
+          path: "user",
+          select: ["firstName", "lastName"],
+        },
+      })
+      .exec();
+
+    return res.status(200).json(posts);
+  } catch (err) {
+    return res.status(500).json({ error: "Internal Server Error", err });
+  }
+};
+
 exports.addLikeToPost = async function (req, res, next) {
   try {
     const loggedInUserID = req.user._id;
