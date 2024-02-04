@@ -5,6 +5,9 @@ var router = express.Router();
 //get user
 router.get("/user/:id", usersController.getUser);
 
+//edit user bio
+router.put("/user/:id/bio", usersController.editUserInfo);
+
 //send friend reqs
 router.post("/sendFriendReq/:id", usersController.sendFriendReq);
 

@@ -1,4 +1,5 @@
 const User = require("../models/newUserModel");
+const Post = require("../models/newPostModel");
 const mongoose = require("mongoose");
 
 //get friend reqs
@@ -111,7 +112,7 @@ exports.findUser = async function (req, res, next) {
 //edit profile
 exports.editUserInfo = async function (req, res, next) {
   try {
-    let user = await User.findByIdAndUpdate(req.params.id, {
+    let user = await User.findByIdAndUpdate(req.user._id, {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       profile_pic: req.body.profile_pic,
@@ -170,7 +171,8 @@ exports.sendFriendReq = async function (req, res, next) {
 //accept friend req
 exports.acceptFriendReq = async function (req, res, next) {
   try {
-    const requestingUser = req.body.RequestingFriendsId;
+    const requestingUserId = req.body.RequestingFriendsId;
+    const requestingUser = await User.findById(requestingUserId);
     const currentUser = req.user;
 
     // Update the current user's friends list
@@ -178,7 +180,7 @@ exports.acceptFriendReq = async function (req, res, next) {
       { _id: currentUser._id },
       {
         $push: { friends: requestingUser },
-        $pull: { incomingFriendRequests: requestingUser },
+        $pull: { incomingFriendRequests: requestingUserId },
       }
     );
 
@@ -191,23 +193,26 @@ exports.acceptFriendReq = async function (req, res, next) {
       }
     );
 
-    const contentReqUser = `${requestingUser.firstName} ${requestingUser.lastName} is now friends with ${currentUser.firstName} ${currentUser.lastName}`;
-    const contentLoggedUser = `${currentUser.firstName} ${currentUser.lastName} is now friends with ${requestingUser.firstName} ${requestingUser.lastName}`;
+    const contentReqUser = `${requestingUser.firstName} is now friends with ${currentUser.firstName} ${currentUser.lastName}`;
+    const contentLoggedUser = `${currentUser.firstName} is now friends with ${requestingUser.firstName} ${requestingUser.lastName}`;
 
     // Create new posts for both users
     const newPostForReqUser = new Post({
       content: contentReqUser,
-      poster: requestingUser,
+      user: requestingUserId,
+      profile: requestingUserId,
       type: "newFriend",
     });
     await newPostForReqUser.save();
 
     const newPostForLoggedUser = new Post({
       content: contentLoggedUser,
-      poster: currentUser._id,
+      user: currentUser._id,
+      profile: currentUser._id,
       type: "newFriend",
     });
     await newPostForLoggedUser.save();
+    console.log("newPostForLoggedUser", newPostForLoggedUser);
 
     return res.status(200).json({ success: true });
   } catch (err) {
@@ -284,7 +289,7 @@ exports.getFriendsList = async function (req, res, next) {
 exports.deleteFriend = async function (req, res, next) {
   try {
     // RequestingFriendsId is the ID of the user who sent the request
-    const deletedUsersId = new ObjectId(req.params.id);
+    const deletedUsersId = req.body.id;
     const currentUserID = req.user._id;
 
     // Update the current user's friends list
