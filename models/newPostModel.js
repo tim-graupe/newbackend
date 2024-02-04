@@ -7,7 +7,7 @@ const PostSchema = new Schema({
     type: String,
     required: true,
     minLength: 1,
-    maxLength: 1000,
+    maxLength: 5000,
   },
   user: {
     type: Schema.Types.ObjectId,
