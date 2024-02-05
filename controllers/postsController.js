@@ -136,3 +136,12 @@ exports.newComment = async function (req, res, next) {
     res.status(500).json({ error: "Error occurred while creating a comment" });
   }
 };
+
+exports.deletePost = async function (req, res, next) {
+  try {
+    await Post.deleteOne({ _id: req.params.id });
+    return res.status(200).json({ msg: "Post successfully deleted" });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};

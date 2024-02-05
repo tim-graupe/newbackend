@@ -151,7 +151,7 @@ app.get(
   passport.authenticate("google", { failureRedirect: "/login" }),
   function (req, res) {
     // Successful authentication, redirect home.
-    res.redirect("/");
+    res.redirect("http://localhost:3000/dashboard");
   }
 );
 
@@ -159,7 +159,7 @@ app.post(
   "/login",
   passport.authenticate("local", {
     failureRedirect: "/login",
-    successRedirect: "/",
+    successRedirect: "/dashboard",
   })
 );
 app.use("/", indexRouter);

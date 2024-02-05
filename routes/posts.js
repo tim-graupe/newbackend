@@ -15,6 +15,9 @@ router.get("/getFriendsPosts/:id", postsController.getFriendsPosts);
 //like post
 router.post("/likePost/:id", postsController.addLikeToPost);
 
+//delete post
+router.delete("/delete/post/:id", postsController.deletePost);
+
 //new comment
 router.post("/commentOnPost/:id", postsController.newComment);
 
