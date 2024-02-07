@@ -27,6 +27,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/images", express.static(path.join(__dirname + "/images")));
+app.use(express.static("images"));
+
 const port = 4000;
 app.listen(port, () => {
   console.log(`App listening on port ${port}!`);

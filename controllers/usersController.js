@@ -75,6 +75,7 @@ exports.getGroupsUserIsIn = async function (req, res, next) {
 };
 
 //search user
+
 exports.findUser = async function (req, res, next) {
   const searchName = req.query.name.trim();
 
