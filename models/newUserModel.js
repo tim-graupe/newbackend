@@ -28,27 +28,4 @@ const UserSchema = new mongoose.Schema({
   ],
 });
 
-// UserSchema.pre("save", function (next) {
-//   const user = this;
-
-//   // Generate a salt and hash the password
-//   bcrypt.genSalt(10, (err, salt) => {
-//     if (err) return next(err);
-
-//     bcrypt.hash(user.password, salt, (err, hash) => {
-//       if (err) return next(err);
-
-//       user.password = hash;
-//       next();
-//     });
-//   });
-// });
-
-// UserSchema.methods.isValidPassword = async function (password) {
-//   const user = this;
-//   const compare = await bcrypt.compare(password, user.password);
-
-//   return compare;
-// };
-
 module.exports = mongoose.model("User", UserSchema);
