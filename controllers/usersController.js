@@ -1,6 +1,31 @@
 const User = require("../models/newUserModel");
 const Post = require("../models/newPostModel");
 const mongoose = require("mongoose");
+const passport = require("passport");
+const bcrypt = require("bcryptjs");
+const router = require("express").Router();
+const multer = require("multer");
+const { v4: uuidv4 } = require("uuid");
+let path = require("path");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "images");
+  },
+  filename: function (req, file, cb) {
+    cb(null, uuidv4() + "-" + Date.now() + path.extname(file.originalname));
+  },
+});
+
+const fileFilter = (req, file, cb) => {
+  const allowedFileTypes = ["image/jpeg", "image/jpg", "image/png"];
+  if (allowedFileTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+let upload = multer({ storage, fileFilter });
 
 //get friend reqs
 exports.getFriendReqs = async function (req, res, next) {
@@ -32,15 +57,21 @@ exports.getUser = async function (req, res, next) {
     let user = await User.findById(userId)
       .populate("friends", ["firstName", "lastName", "profile_pic"])
       .exec();
+
+    if (!user) {
+      return res.redirect("/usernotfound");
+    }
+
     return res.status(200).send(user);
   } catch (err) {
-    console.log("err", err);
+    console.error("Error:", err);
+
+    // Handle other errors and send a 500 status
     return res
       .status(500)
       .json({ error: "Something went wrong in getting user" });
   }
 };
-
 exports.getGroup = async function (req, res, next) {
   try {
     const userId = req.params.id;
@@ -111,25 +142,30 @@ exports.findUser = async function (req, res, next) {
 };
 
 //edit profile
-exports.editUserInfo = async function (req, res, next) {
-  try {
-    let user = await User.findByIdAndUpdate(req.user._id, {
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      profile_pic: req.body.profile_pic,
-      relationship: req.body.relationship,
-      politics: req.body.politics,
-      high_school: req.body.high_school,
-      college: req.body.college,
-      current_city: req.body.current_city,
-      home_town: req.body.home_town,
-      // dob: req.body.dob,
-    });
-    return res.status(200).json(user);
-  } catch (err) {
-    return res.status(500).json({ error: "Something went wrong!", err });
-  }
-};
+exports.editUserInfo = [
+  upload.single("profile_pic"),
+  async function (req, res, next) {
+    try {
+      // const profile_pic = req.file.filename;
+
+      let user = await User.findByIdAndUpdate(req.user._id, {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        profile_pic: req.file.filename,
+        relationship: req.body.relationship,
+        politics: req.body.politics,
+        high_school: req.body.high_school,
+        college: req.body.college,
+        current_city: req.body.current_city,
+        home_town: req.body.home_town,
+        // dob: req.body.dob,
+      });
+      return res.status(200).json(user);
+    } catch (err) {
+      return res.status(500).json({ error: "Something went wrong!", err });
+    }
+  },
+];
 
 //send a friend request
 exports.sendFriendReq = async function (req, res, next) {
