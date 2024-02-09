@@ -6,6 +6,9 @@ const postsController = require("../controllers/postsController");
 //new text post
 router.post("/user/:id/new_post", postsController.newTextPost);
 
+// new image post
+router.post("/user/:id/new_img", postsController.newImgPost);
+
 //get user's post
 router.get("/user/:id/posts", postsController.getPosts);
 

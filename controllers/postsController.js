@@ -2,6 +2,57 @@ const Post = require("../models/newPostModel");
 const Comment = require("../models/commentModel");
 const User = require("../models/newUserModel");
 const { ObjectId } = require("mongodb");
+const mongoose = require("mongoose");
+const passport = require("passport");
+const bcrypt = require("bcryptjs");
+const router = require("express").Router();
+const multer = require("multer");
+const { v4: uuidv4 } = require("uuid");
+let path = require("path");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "images");
+  },
+  filename: function (req, file, cb) {
+    cb(null, uuidv4() + "-" + Date.now() + path.extname(file.originalname));
+  },
+});
+
+const fileFilter = (req, file, cb) => {
+  const allowedFileTypes = ["image/jpeg", "image/jpg", "image/png"];
+  if (allowedFileTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+let upload = multer({ storage, fileFilter });
+
+exports.newImgPost = [
+  upload.single("profile_pic"),
+  async function (req, res) {
+    try {
+      let user = await User.findById(req.user._id);
+      const pic = req.file.filename;
+
+      let newPost = new Post({
+        likes: [],
+        date_posted: Date.now(),
+        user: user._id,
+        content: "pic",
+        type: "image",
+        pic: pic,
+        profile: user._id,
+      });
+      await newPost.save();
+      res.status(200).json({ success: true }); // Send a success response if everything is fine
+    } catch (err) {
+      console.error("Error during image upload:", err); // Log the actual error
+      res.status(500).json({ error: "error found", err });
+    }
+  },
+];
 
 exports.getPosts = async function (req, res, next) {
   console.log(req.params.id);
