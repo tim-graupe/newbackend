@@ -37,13 +37,8 @@ app.listen(port, () => {
 app.use(
   require("express-session")({
     secret: process.env.ES_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      maxAge: (7 * 24) & (60 * 60 * 1000),
-      secure: true,
-      sameSite: "none",
-    },
+    resave: true,
+    saveUninitialized: true,
   })
 );
 
@@ -80,7 +75,7 @@ passport.use(
     {
       clientID: process.env.clientID,
       clientSecret: process.env.secret,
-      callbackURL: `https://newbackend-production-6c67.up.railway.app/auth/google/callback`,
+      callbackURL: `/auth/google/callback`,
     },
     async function (accessToken, refreshToken, profile, done) {
       try {
