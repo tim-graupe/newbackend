@@ -45,7 +45,7 @@ app.use(
 const apiUrl =
   process.env.NODE_ENV === "development"
     ? `http://localhost:4000`
-    : config.production.apiUrl;
+    : process.env.apiUrl;
 
 app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
