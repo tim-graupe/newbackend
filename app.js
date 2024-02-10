@@ -39,6 +39,9 @@ app.use(
     secret: process.env.ES_SECRET,
     resave: true,
     saveUninitialized: true,
+    cookie: {
+      secure: false,
+    },
   })
 );
 
