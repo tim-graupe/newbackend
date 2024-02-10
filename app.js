@@ -47,8 +47,13 @@ const apiUrl =
     ? `http://localhost:4000`
     : process.env.apiUrl;
 
+const baseUrl =
+  process.env.NODE_ENV === "development"
+    ? `http://localhost:3000`
+    : process.env.baseUrl;
+
 app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.setHeader("Access-Control-Allow-Origin", baseUrl);
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET, POST, OPTIONS, PUT, PATCH, DELETE"
@@ -60,7 +65,8 @@ app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Credentials", true);
   next();
 });
-
+console.log("apiUrl => ", apiUrl);
+console.log("baseUrl =>", baseUrl);
 app.use(passport.initialize());
 app.use(passport.session());
 
