@@ -75,7 +75,7 @@ passport.use(
     {
       clientID: process.env.clientID,
       clientSecret: process.env.secret,
-      callbackURL: `${process.env.callBackURI}`,
+      callbackURL: `https://newbackend-production-6c67.up.railway.app/auth/google/callback`,
     },
     async function (accessToken, refreshToken, profile, done) {
       try {
