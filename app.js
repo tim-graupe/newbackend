@@ -37,10 +37,12 @@ app.listen(port, () => {
 app.use(
   require("express-session")({
     secret: process.env.ES_SECRET,
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
     cookie: {
-      secure: false,
+      maxAge: (7 * 24) & (60 * 60 * 1000),
+      secure: true,
+      sameSite: "none",
     },
   })
 );
