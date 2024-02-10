@@ -36,7 +36,7 @@ app.listen(port, () => {
 });
 app.use(
   require("express-session")({
-    secret: process.env.secret,
+    secret: process.env.ES_SECRET,
     resave: true,
     saveUninitialized: true,
   })
