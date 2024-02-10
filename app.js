@@ -75,7 +75,7 @@ passport.use(
     {
       clientID: process.env.clientID,
       clientSecret: process.env.secret,
-      callbackURL: "http://localhost:4000/auth/google/callback",
+      callbackURL: `${apiUrl}/auth/google/callback`,
     },
     async function (accessToken, refreshToken, profile, done) {
       try {
@@ -165,7 +165,7 @@ app.get(
   passport.authenticate("google", { failureRedirect: "/login" }),
   function (req, res) {
     // Successful authentication, redirect home.
-    res.redirect("http://localhost:3000/dashboard");
+    res.redirect(`${baseUrl}/dashboard`);
   }
 );
 
