@@ -3,7 +3,7 @@ const passport = require("passport");
 const bcrypt = require("bcryptjs");
 const router = require("express").Router();
 const multer = require("multer");
-const { v4: uuidv4 } = require("uuid");
+const { v1: uuidv1 } = require("uuid");
 let path = require("path");
 
 const storage = multer.diskStorage({
