@@ -45,9 +45,11 @@ app.use(
     cookie: {
       sameSite: "none",
       secure: true,
+      httpOnly: true,
     },
   })
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -166,6 +168,7 @@ app.get(
   passport.authenticate("google", { failureRedirect: "/login" }),
   function (req, res) {
     // Successful authentication, redirect home.
+    console.log("Google Authentication Successful");
     res.redirect(`${baseUrl}/`);
   }
 );
