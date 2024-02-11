@@ -43,6 +43,8 @@ app.use(
     saveUninitialized: true,
   })
 );
+app.use(passport.initialize());
+app.use(passport.session());
 
 const apiUrl =
   process.env.NODE_ENV === "development"
@@ -63,8 +65,6 @@ app.use(
 );
 console.log("apiUrl => ", apiUrl);
 console.log("baseUrl =>", baseUrl);
-app.use(passport.initialize());
-app.use(passport.session());
 
 passport.use(
   new GoogleStrategy(
@@ -161,7 +161,7 @@ app.get(
   passport.authenticate("google", { failureRedirect: "/login" }),
   function (req, res) {
     // Successful authentication, redirect home.
-    res.redirect(`${baseUrl}/dashboard`);
+    res.redirect(`${baseUrl}/`);
   }
 );
 
@@ -169,7 +169,7 @@ app.post(
   "/login",
   passport.authenticate("local", {
     failureRedirect: "/login",
-    successRedirect: "/dashboard",
+    successRedirect: "/",
   })
 );
 app.use("/", indexRouter);
