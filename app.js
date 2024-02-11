@@ -22,6 +22,7 @@ var indexRouter = require("./routes/index");
 const userRouter = require("./routes/users");
 const postRouter = require("./routes/posts");
 var app = express();
+app.enable("trust proxy");
 
 // view engine setup
 app.use(logger("dev"));
@@ -41,6 +42,10 @@ app.use(
     secret: process.env.ES_SECRET,
     resave: true,
     saveUninitialized: true,
+    cookie: {
+      sameSite: "none",
+      secure: true,
+    },
   })
 );
 app.use(passport.initialize());
