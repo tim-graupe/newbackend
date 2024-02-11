@@ -16,25 +16,6 @@ main().catch((err) => console.log(err));
 async function main() {
   await mongoose.connect(process.env.mongoDB);
 }
-
-const apiUrl =
-  process.env.NODE_ENV === "development"
-    ? `http://localhost:4000`
-    : process.env.apiUrl;
-
-const baseUrl =
-  process.env.NODE_ENV === "development"
-    ? `http://localhost:3000`
-    : `https://babblebook.netlify.app`;
-
-app.use(
-  cors({
-    origin: baseUrl,
-    methods: ["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
-    credentials: true,
-  })
-);
-
 var indexRouter = require("./routes/index");
 const userRouter = require("./routes/users");
 const postRouter = require("./routes/posts");
@@ -61,6 +42,23 @@ app.use(
   })
 );
 
+const apiUrl =
+  process.env.NODE_ENV === "development"
+    ? `http://localhost:4000`
+    : process.env.apiUrl;
+
+const baseUrl =
+  process.env.NODE_ENV === "development"
+    ? `http://localhost:3000`
+    : `https://babblebook.netlify.app`;
+
+app.use(
+  cors({
+    origin: baseUrl,
+    methods: ["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
+    credentials: true,
+  })
+);
 console.log("apiUrl => ", apiUrl);
 console.log("baseUrl =>", baseUrl);
 app.use(passport.initialize());
