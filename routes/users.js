@@ -39,6 +39,6 @@ router.get("/group/:id", usersController.getGroup);
 router.get("/user/:id/groups", usersController.getGroupsUserIsIn);
 
 // //search user
-router.get("/search", usersController.findUser);
+router.get("/search", usersController.searchUser);
 
 module.exports = router;

@@ -107,40 +107,24 @@ exports.getGroupsUserIsIn = async function (req, res, next) {
 
 //search user
 
-exports.findUser = async function (req, res, next) {
-  const searchName = req.query.name.trim();
-
+exports.searchUser = async function (req, res) {
   try {
-    let searchResults = {};
+    const { firstName, lastName } = req.query;
 
-    // Search for a user by first name or last name
-    const userResult = await User.findOne({
-      $or: [
-        { firstName: new RegExp(searchName, "i") },
-        { lastName: new RegExp(searchName, "i") },
-      ],
-    });
-
-    if (userResult) {
-      searchResults.user = userResult;
+    const query = {};
+    if (firstName) {
+      query.firstName = { $regex: new RegExp(firstName, "i") };
     }
-
-    // Search for a group by name
-    // const groupResult = await Group.findOne({
-    //   name: new RegExp(searchName, "i"),
-    // });
-
-    // if (groupResult) {
-    //   searchResults.group = groupResult;
-    // }
-
-    res.json(searchResults);
+    if (lastName) {
+      query.lastName = { $regex: new RegExp(lastName, "i") };
+    }
+    const users = await User.find(query);
+    res.status(200).json({ users });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
 //edit profile
 exports.editUserInfo = [
   upload.single("profile_pic"),
