@@ -4,7 +4,6 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const cors = require("cors");
-
 const passport = require("passport");
 const bcrypt = require("bcrypt");
 const User = require("./models/newUserModel");
@@ -50,6 +49,7 @@ app.use(
   })
 );
 
+//passport & cors
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -61,18 +61,15 @@ const apiUrl =
 const baseUrl =
   process.env.NODE_ENV === "development"
     ? `http://localhost:3000`
-    : `https://babblebook.netlify.app`;
+    : process.env.baseUrl;
 
 app.use(
   cors({
-    origin: [baseUrl],
+    origin: baseUrl,
     methods: ["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
     credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"],
-    exposedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
 console.log("apiUrl => ", apiUrl);
 console.log("baseUrl =>", baseUrl);
 
@@ -119,9 +116,8 @@ passport.use(
       usernameField: "email",
     },
     async function (email, password, done) {
-      // Change 'username' to 'email' here
       try {
-        const user = await User.findOne({ email: email }); // Use 'email' here
+        const user = await User.findOne({ email: email });
 
         if (!user) {
           console.log("Incorrect email.");
@@ -137,7 +133,7 @@ passport.use(
 
         return done(null, user);
       } catch (err) {
-        console.log("err"); // Fix the logging of the error
+        console.log("err");
         return done(err);
       }
     }
@@ -160,7 +156,6 @@ passport.deserializeUser(async function (id, done) {
 
 app.get(
   "/auth/google",
-  cors(), // Add this line
   passport.authenticate("google", {
     scope: ["profile", "email"],
     prompt: "select_account",
@@ -169,9 +164,9 @@ app.get(
 
 app.get(
   "/auth/google/callback",
-  cors(), // Add this line
   passport.authenticate("google", { failureRedirect: "/login" }),
   function (req, res) {
+    // Successful authentication, redirect home.
     console.log("Google Authentication Successful");
     res.redirect(`${baseUrl}/`);
   }
@@ -187,6 +182,7 @@ app.post(
 app.use("/", indexRouter);
 app.use("/", userRouter);
 app.use("/", postRouter);
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
