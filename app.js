@@ -68,8 +68,11 @@ app.use(
     origin: baseUrl,
     methods: ["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
     credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
+    exposedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
 console.log("apiUrl => ", apiUrl);
 console.log("baseUrl =>", baseUrl);
 
@@ -157,6 +160,7 @@ passport.deserializeUser(async function (id, done) {
 
 app.get(
   "/auth/google",
+  cors(), // Add this line
   passport.authenticate("google", {
     scope: ["profile", "email"],
     prompt: "select_account",
@@ -165,9 +169,9 @@ app.get(
 
 app.get(
   "/auth/google/callback",
+  cors(), // Add this line
   passport.authenticate("google", { failureRedirect: "/login" }),
   function (req, res) {
-    // Successful authentication, redirect home.
     console.log("Google Authentication Successful");
     res.redirect(`${baseUrl}/`);
   }
