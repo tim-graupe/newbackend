@@ -168,6 +168,10 @@ app.get(
   function (req, res) {
     // Successful authentication, redirect home.
     console.log("Google Authentication Successful");
+
+    // Set the credentials option to true to include cookies in the response.
+    res.cookie("user", req.user, { httpOnly: true });
+
     res.redirect(`${baseUrl}/`);
   }
 );
