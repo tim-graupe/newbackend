@@ -65,7 +65,7 @@ const baseUrl =
 
 app.use(
   cors({
-    origin: baseUrl,
+    origin: [baseUrl],
     methods: ["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
