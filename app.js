@@ -40,7 +40,7 @@ app.use(
   require("express-session")({
     secret: process.env.ES_SECRET,
     resave: true,
-    saveUninitialized: true,
+    saveUninitialized: false,
   })
 );
 
