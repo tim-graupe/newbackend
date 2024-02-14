@@ -163,8 +163,6 @@ app.get(
   function (req, res) {
     // Successful authentication, redirect home.
     console.log("Google Authentication Successful");
-    let user = req.user;
-    req.session.user = user;
     res.redirect(`${baseUrl}/`);
   }
 );
