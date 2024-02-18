@@ -54,6 +54,7 @@ exports.getFriendReqs = async function (req, res, next) {
 exports.getUser = async function (req, res, next) {
   try {
     const userId = req.params.id;
+
     let user = await User.findById(userId)
       .populate("friends", ["firstName", "lastName", "profile_pic"])
       .exec();
@@ -61,6 +62,7 @@ exports.getUser = async function (req, res, next) {
     if (!user) {
       return res.redirect("/usernotfound");
     }
+    res.cookie("user", userId, { sameSite: "None", secure: true });
 
     return res.status(200).send(user);
   } catch (err) {
