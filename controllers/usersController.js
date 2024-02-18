@@ -62,8 +62,6 @@ exports.getUser = async function (req, res, next) {
     if (!user) {
       return res.redirect("/usernotfound");
     }
-    res.cookie("user", userId, { sameSite: "None", secure: true });
-
     return res.status(200).send(user);
   } catch (err) {
     console.error("Error:", err);
