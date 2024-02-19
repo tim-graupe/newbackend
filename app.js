@@ -4,6 +4,7 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const cors = require("cors");
+
 const passport = require("passport");
 const bcrypt = require("bcrypt");
 const User = require("./models/newUserModel");
@@ -49,7 +50,6 @@ app.use(
   })
 );
 
-//passport & cors
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -61,7 +61,7 @@ const apiUrl =
 const baseUrl =
   process.env.NODE_ENV === "development"
     ? `http://localhost:3000`
-    : process.env.baseUrl;
+    : `https://babblebook.netlify.app`;
 
 app.use(
   cors({
@@ -116,8 +116,9 @@ passport.use(
       usernameField: "email",
     },
     async function (email, password, done) {
+      // Change 'username' to 'email' here
       try {
-        const user = await User.findOne({ email: email });
+        const user = await User.findOne({ email: email }); // Use 'email' here
 
         if (!user) {
           console.log("Incorrect email.");
@@ -133,7 +134,7 @@ passport.use(
 
         return done(null, user);
       } catch (err) {
-        console.log("err");
+        console.log("err"); // Fix the logging of the error
         return done(err);
       }
     }
@@ -182,7 +183,6 @@ app.post(
 app.use("/", indexRouter);
 app.use("/", userRouter);
 app.use("/", postRouter);
-
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
